@@ -1,53 +1,71 @@
 import java.util.Scanner;
 
-// Node class
+// Node class remains the same
 class Node {
     int data;
     Node next;
 
-    Node(int data) {
+    public Node(int data) {
         this.data = data;
         this.next = null;
     }
 }
 
-// Main class
-public class CircularLinkedList {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+// Modified LinkedList class for circular linked list
+class CircularLinkedList {
+    Node head;
+    Node tail; // Added tail pointer for circular list
 
-        Node head = null;
-        Node tail = null;
+    // Method to add a new node at the end
+    public void append(int data) {
+        Node newNode = new Node(data);
+        
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            newNode.next = head; // Points to itself to form circle
+        } else {
+            tail.next = newNode;
+            newNode.next = head; // New node points back to head
+            tail = newNode; // Update tail
+        }
+    }
 
-        System.out.print("Enter number of elements: ");
-        int n = sc.nextInt();
-
-        // Build the circular linked list
-        for (int i = 0; i < n; i++) {
-            System.out.print("Enter element " + (i + 1) + ": ");
-            int value = sc.nextInt();
-
-            Node newNode = new Node(value);
-
-            if (head == null) {
-                head = newNode;
-                tail = newNode;
-                tail.next = head; // Circular link for the first node
-            } else {
-                tail.next = newNode;
-                tail = newNode;
-                tail.next = head; // Make it circular
-            }
+    // Method to display the circular linked list
+    public void display() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return;
         }
 
-        // Display the circular linked list
+        Node current = head;
         System.out.print("Circular Linked List: ");
-        if (head != null) {
-            Node current = head;
-            do {
-                System.out.print(current.data + " ");
-                current = current.next;
-            } while (current != head);
+        
+        // Using do-while to ensure we print at least once
+        do {
+            System.out.print(current.data + " -> ");
+            current = current.next;
+        } while (current != head);
+        
+        System.out.println("(back to head)");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        CircularLinkedList list = new CircularLinkedList();
+
+        System.out.print("Enter the number of elements: ");
+        int n = scanner.nextInt();
+
+        System.out.println("Enter " + n + " elements:");
+        for (int i = 0; i < n; i++) {
+            int data = scanner.nextInt();
+            list.append(data);
         }
+
+        list.display();
+        scanner.close();
     }
 }
